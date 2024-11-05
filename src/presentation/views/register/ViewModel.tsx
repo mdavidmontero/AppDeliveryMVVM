@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { RegisterAuthUseCase } from "../../../domain/useCases/auth/RegisterAuth";
 
 const RegisterViewModel = () => {
   const [values, setValues] = useState({
     name: "",
-    lastName: "",
+    lastname: "",
     phone: "",
     email: "",
     password: "",
@@ -13,8 +14,9 @@ const RegisterViewModel = () => {
     setValues({ ...values, [property]: value });
   };
 
-  const register = () => {
-    console.log(JSON.stringify(values));
+  const register = async () => {
+    const response = await RegisterAuthUseCase(values);
+    console.log("Result: ", JSON.stringify(response));
   };
   return {
     ...values,
