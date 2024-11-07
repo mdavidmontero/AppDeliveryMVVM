@@ -1,4 +1,10 @@
-import { Text, View, Image, TouchableOpacity } from "react-native";
+import {
+  Text,
+  View,
+  Image,
+  TouchableOpacity,
+  ToastAndroid,
+} from "react-native";
 import { RoundedButton } from "../../components/RoundedButton";
 import { useNavigation } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
@@ -6,9 +12,16 @@ import { RootStackParamList } from "../../../../App";
 import useViewModel from "./ViewModel";
 import { CustomTextInput } from "../../components/CustomTextInput";
 import styles from "./Styles";
+import { useEffect } from "react";
 export const HomeScreen = () => {
-  const { email, password, onChange } = useViewModel();
+  const { email, password, onChange, login, errorMessage } = useViewModel();
   const navigation = useNavigation<StackNavigationProp<RootStackParamList>>();
+
+  useEffect(() => {
+    if (errorMessage != "") {
+      ToastAndroid.show(errorMessage, ToastAndroid.LONG);
+    }
+  }, [errorMessage]);
 
   return (
     <View style={styles.container}>
@@ -43,12 +56,7 @@ export const HomeScreen = () => {
           onChangeText={onChange}
         />
         <View style={{ marginTop: 30 }}>
-          <RoundedButton
-            onPress={() => {
-              console.log(email, password);
-            }}
-            text="Ingresar"
-          />
+          <RoundedButton onPress={() => login()} text="Ingresar" />
         </View>
         <View style={styles.formRegister}>
           <Text>No tienes Cuenta?</Text>
