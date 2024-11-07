@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { RegisterAuthUseCase } from "../../../domain/useCases/auth/RegisterAuth";
+import { RegisterWithImageAuthUseCase } from "../../../domain/useCases/auth/RegisterWithImageAuth";
+import * as ImagePicker from "expo-image-picker";
 
 const RegisterViewModel = () => {
   const [values, setValues] = useState({
@@ -7,9 +9,35 @@ const RegisterViewModel = () => {
     lastname: "",
     phone: "",
     email: "",
+    image: "",
     password: "",
     confirmPassword: "",
   });
+
+  const [file, setFile] = useState<ImagePicker.ImageInfo>();
+
+  const pickImage = async () => {
+    let result = await ImagePicker.launchImageLibraryAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      onChange("image", result.assets[0].uri);
+      setFile(result.assets[0]);
+    }
+  };
+  const takePhoto = async () => {
+    let result = await ImagePicker.launchCameraAsync({
+      mediaTypes: ImagePicker.MediaTypeOptions.All,
+      allowsEditing: true,
+      quality: 1,
+    });
+    if (!result.canceled) {
+      onChange("image", result.assets[0].uri);
+      setFile(result.assets[0]);
+    }
+  };
 
   const [errorMessage, setErrorMessage] = useState("");
   const onChange = (property: string, value: any) => {
@@ -18,7 +46,8 @@ const RegisterViewModel = () => {
 
   const register = async () => {
     if (isValidForm()) {
-      const response = await RegisterAuthUseCase(values);
+      // const response = await RegisterAuthUseCase(values);
+      const response = await RegisterWithImageAuthUseCase(values, file!);
       console.log("Result: ", JSON.stringify(response));
     }
   };
@@ -51,6 +80,10 @@ const RegisterViewModel = () => {
       setErrorMessage("Las contraseñas no coinciden");
       return false;
     }
+    if (values.image === "") {
+      setErrorMessage("Seleccione una Imagen");
+      return false;
+    }
     return true;
   };
 
@@ -59,6 +92,9 @@ const RegisterViewModel = () => {
     onChange,
     register,
     errorMessage,
+    pickImage,
+    file,
+    takePhoto,
   };
 };
 

@@ -2,6 +2,6 @@ import { UserLocalRepositoryImpl } from "../../../data/repositories/UserLocalRep
 
 const { getUser } = new UserLocalRepositoryImpl();
 
-export const getUserUseCase = async () => {
+export const getUserLocalUseCase = async () => {
   return await getUser();
 };

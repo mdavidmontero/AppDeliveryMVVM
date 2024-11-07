@@ -1,9 +1,17 @@
-import { Image, View, Text, ScrollView, ToastAndroid } from "react-native";
+import {
+  Image,
+  View,
+  Text,
+  ScrollView,
+  ToastAndroid,
+  TouchableOpacity,
+} from "react-native";
 import { RoundedButton } from "../../components/RoundedButton";
 import useViewModel from "./ViewModel";
 import { CustomTextInput } from "../../components/CustomTextInput";
 import styles from "./Styles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { ModalPickImage } from "../../components/ModalPickImage";
 
 export const RegisterScreen = () => {
   const {
@@ -11,12 +19,16 @@ export const RegisterScreen = () => {
     lastname,
     phone,
     email,
+    image,
     password,
     confirmPassword,
     onChange,
     register,
     errorMessage,
+    pickImage,
+    takePhoto,
   } = useViewModel();
+  const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     if (errorMessage != "") {
       ToastAndroid.show(errorMessage, ToastAndroid.LONG);
@@ -31,10 +43,16 @@ export const RegisterScreen = () => {
       />
 
       <View style={styles.logoContainer}>
-        <Image
-          source={require("../../../../assets/user_image.png")}
-          style={styles.logoImage}
-        />
+        <TouchableOpacity onPress={() => setModalVisible(true)}>
+          {image === "" ? (
+            <Image
+              source={require("../../../../assets/user_image.png")}
+              style={styles.logoImage}
+            />
+          ) : (
+            <Image source={{ uri: image }} style={styles.logoImage} />
+          )}
+        </TouchableOpacity>
 
         <Text style={styles.logoText}>SELECCIONA UNA IMAGEN</Text>
       </View>
@@ -104,6 +122,12 @@ export const RegisterScreen = () => {
           </View>
         </ScrollView>
       </View>
+      <ModalPickImage
+        openGallery={pickImage}
+        openCamera={takePhoto}
+        modalUsestate={modalVisible}
+        setmodalUseState={setModalVisible}
+      />
     </View>
   );
 };
