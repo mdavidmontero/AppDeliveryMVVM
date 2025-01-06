@@ -1,25 +1,18 @@
-import { useState } from "react";
-import { RegisterAuthUseCase } from "../../../domain/useCases/auth/RegisterAuth";
-import { RegisterWithImageAuthUseCase } from "../../../domain/useCases/auth/RegisterWithImageAuth";
+import { useContext, useState } from "react";
 import * as ImagePicker from "expo-image-picker";
+import { UpdateUserUseCase } from "../../../../domain/useCases/user/UpdateUser";
+import { UpdateImageUserUseCase } from "../../../../domain/useCases/user/UpdateWithImageUser";
+import { User } from "../../../../domain/entities/User";
+import { ResponseApiDelivery } from "../../../../data/sources/remote/models/ResponseApiDelivery";
+import { UserContext } from "../../../context/UserContext";
 
-import { saveUserLocalUseCase } from "../../../domain/useCases/userLocal/SaveUserLocal";
-import { useUserLocal } from "../../hooks/useUserLocal";
-
-const RegisterViewModel = () => {
-  const [values, setValues] = useState({
-    name: "",
-    lastname: "",
-    phone: "",
-    email: "",
-    image: "",
-    password: "",
-    confirmPassword: "",
-  });
-
+const ProfileUpdateViewModel = (user: User) => {
+  const [values, setValues] = useState(user);
   const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [file, setFile] = useState<ImagePicker.ImageInfo>();
-  const { user, getUserSession } = useUserLocal();
+  const { saveUserSession } = useContext(UserContext);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -44,21 +37,31 @@ const RegisterViewModel = () => {
     }
   };
 
-  const [errorMessage, setErrorMessage] = useState("");
   const onChange = (property: string, value: any) => {
     setValues({ ...values, [property]: value });
   };
+  const onChangeInfoUpdate = (
+    name: string,
+    lastname: string,
+    phone: string
+  ) => {
+    setValues({ ...values, name, lastname, phone });
+  };
 
-  const register = async () => {
+  const update = async () => {
     if (isValidForm()) {
       setLoading(true);
-      // const response = await RegisterAuthUseCase(values);
-      const response = await RegisterWithImageAuthUseCase(values, file!);
+      let response = {} as ResponseApiDelivery;
+      if (values.image?.includes("https://")) {
+        response = await UpdateUserUseCase(values);
+      } else {
+        response = await UpdateImageUserUseCase(values, file!);
+      }
       setLoading(false);
       console.log("Result: ", JSON.stringify(response));
       if (response.success) {
-        await saveUserLocalUseCase(response.data);
-        getUserSession();
+        saveUserSession(response.data);
+        setSuccessMessage(response.message);
       } else {
         setErrorMessage(response.message);
       }
@@ -73,38 +76,22 @@ const RegisterViewModel = () => {
       setErrorMessage("Ingresa tus apellidos");
       return false;
     }
-    if (values.email === "") {
-      setErrorMessage("Ingresa tu correo electrónico");
-      return false;
-    }
+
     if (values.phone === "") {
       setErrorMessage("Ingresa tu telefono");
       return false;
     }
-    if (values.password === "") {
-      setErrorMessage("Ingresa la contraseña");
-      return false;
-    }
-    if (values.confirmPassword === "") {
-      setErrorMessage("Ingresa la confirmación de la contraseña");
-      return false;
-    }
-    if (values.password !== values.confirmPassword) {
-      setErrorMessage("Las contraseñas no coinciden");
-      return false;
-    }
-    if (values.image === "") {
-      setErrorMessage("Seleccione una Imagen");
-      return false;
-    }
+
     return true;
   };
 
   return {
     ...values,
     onChange,
-    register,
+    onChangeInfoUpdate,
     errorMessage,
+    successMessage,
+    update,
     pickImage,
     file,
     takePhoto,
@@ -113,4 +100,4 @@ const RegisterViewModel = () => {
   };
 };
 
-export default RegisterViewModel;
+export default ProfileUpdateViewModel;

@@ -7,62 +7,56 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
-import { RoundedButton } from "../../components/RoundedButton";
+import { RoundedButton } from "../../../components/RoundedButton";
 import useViewModel from "./ViewModel";
-import { CustomTextInput } from "../../components/CustomTextInput";
+import { CustomTextInput } from "../../../components/CustomTextInput";
 import styles from "./Styles";
 import { useEffect, useState } from "react";
-import { ModalPickImage } from "../../components/ModalPickImage";
+import { ModalPickImage } from "../../../components/ModalPickImage";
 import { StackScreenProps } from "@react-navigation/stack";
-import { RootStackParamList } from "../../../../App";
-import { MyColors } from "../../theme/AppTheme";
+import { RootStackParamList } from "../../../../../App";
+import { MyColors } from "../../../theme/AppTheme";
 
 interface Props
-  extends StackScreenProps<RootStackParamList, "RegisterScreen"> {}
-export const RegisterScreen = ({ navigation, route }: Props) => {
+  extends StackScreenProps<RootStackParamList, "ProfileUpdateScreen"> {}
+export const ProfileUpdateScreen = ({ navigation, route }: Props) => {
+  const { user } = route.params;
   const {
     name,
     lastname,
     phone,
-    email,
     image,
-    password,
-    confirmPassword,
+    update,
     onChange,
-    register,
     errorMessage,
+    successMessage,
     pickImage,
     takePhoto,
-    user,
     loading,
-  } = useViewModel();
+  } = useViewModel(user);
   const [modalVisible, setModalVisible] = useState(false);
   useEffect(() => {
     if (errorMessage != "") {
       ToastAndroid.show(errorMessage, ToastAndroid.LONG);
     }
   }, [errorMessage]);
-
   useEffect(() => {
-    if (user?.id !== null && user?.id !== undefined) {
-      navigation.replace("ClientTabsNavigator");
+    if (successMessage != "") {
+      ToastAndroid.show(successMessage, ToastAndroid.LONG);
     }
-  }, [user]);
+  }, [successMessage]);
 
   return (
     <View style={styles.container}>
       <Image
-        source={require("../../../../assets/chef.jpg")}
+        source={require("../../../../../assets/city.jpg")}
         style={styles.imageBackground}
       />
 
       <View style={styles.logoContainer}>
         <TouchableOpacity onPress={() => setModalVisible(true)}>
           {image === "" ? (
-            <Image
-              source={require("../../../../assets/user_image.png")}
-              style={styles.logoImage}
-            />
+            <Image source={{ uri: user?.image }} style={styles.logoImage} />
           ) : (
             <Image source={{ uri: image }} style={styles.logoImage} />
           )}
@@ -73,10 +67,10 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
 
       <View style={styles.form}>
         <ScrollView>
-          <Text style={styles.formText}>REGISTRARSE</Text>
+          <Text style={styles.formText}>ACTUALIZAR INFORMACION</Text>
 
           <CustomTextInput
-            image={require("../../../../assets/user.png")}
+            image={require("../../../../../assets/user.png")}
             placeholder="Nombres"
             value={name}
             keyboardType="default"
@@ -85,7 +79,7 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
           />
 
           <CustomTextInput
-            image={require("../../../../assets/my_user.png")}
+            image={require("../../../../../assets/my_user.png")}
             placeholder="Apellidos"
             value={lastname}
             keyboardType="default"
@@ -94,16 +88,7 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
           />
 
           <CustomTextInput
-            image={require("../../../../assets/email.png")}
-            placeholder="Correo electronico"
-            value={email}
-            keyboardType="email-address"
-            property="email"
-            onChangeText={onChange}
-          />
-
-          <CustomTextInput
-            image={require("../../../../assets/phone.png")}
+            image={require("../../../../../assets/phone.png")}
             placeholder="Telefono"
             value={phone}
             keyboardType="numeric"
@@ -111,28 +96,8 @@ export const RegisterScreen = ({ navigation, route }: Props) => {
             onChangeText={onChange}
           />
 
-          <CustomTextInput
-            image={require("../../../../assets/password.png")}
-            placeholder="Contraseña"
-            value={password}
-            keyboardType="default"
-            secureTextEntry={true}
-            property="password"
-            onChangeText={onChange}
-          />
-
-          <CustomTextInput
-            image={require("../../../../assets/confirm_password.png")}
-            placeholder="Confirmar Contraseña"
-            value={confirmPassword}
-            keyboardType="default"
-            secureTextEntry={true}
-            property="confirmPassword"
-            onChangeText={onChange}
-          />
-
           <View style={{ marginTop: 30 }}>
-            <RoundedButton text="CONFIRMAR" onPress={() => register()} />
+            <RoundedButton text="CONFIRMAR" onPress={() => update()} />
           </View>
         </ScrollView>
       </View>

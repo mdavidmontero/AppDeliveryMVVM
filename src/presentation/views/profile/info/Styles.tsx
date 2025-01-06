@@ -1,19 +1,13 @@
 import { StyleSheet } from "react-native";
 
-const Registerstyles = StyleSheet.create({
+const ProfileInfoStyles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "black",
   },
-  imageBackground: {
-    width: "100%",
-    height: "100%",
-    opacity: 0.7,
-    bottom: "30%",
-  },
   form: {
     width: "100%",
-    height: "72%",
+    height: "45%",
     backgroundColor: "white",
     position: "absolute",
     bottom: 0,
@@ -25,29 +19,38 @@ const Registerstyles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 16,
   },
-
-  formRegister: {
-    flexDirection: "row",
-    justifyContent: "center",
-    marginTop: 30,
+  formImage: {
+    height: 30,
+    width: 30,
   },
-  formRegisterText: {
-    fontStyle: "italic",
-    color: "orange",
-    borderBottomWidth: 1,
-    borderBottomColor: "orange",
-    fontWeight: "bold",
-    marginLeft: 10,
+  formInfo: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  formTextDescription: {
+    fontSize: 12,
+    color: "gray",
+  },
+  formContent: {
+    marginLeft: 15,
+  },
+  imageBackground: {
+    width: "100%",
+    height: "100%",
+    opacity: 0.7,
+    bottom: "30%",
   },
   logoContainer: {
     position: "absolute",
     alignSelf: "center",
-    top: "5%",
-    alignItems: "center",
+    top: "14%",
   },
   logoImage: {
-    width: 100,
-    height: 100,
+    width: 180,
+    height: 180,
+    borderRadius: 100,
+    borderColor: "white",
+    borderWidth: 2,
   },
   logoText: {
     color: "white",
@@ -56,13 +59,15 @@ const Registerstyles = StyleSheet.create({
     marginTop: 10,
     fontWeight: "bold",
   },
-  loading: {
+  logout: {
     position: "absolute",
-    bottom: 0,
-    top: 0,
-    right: 0,
-    left: 0,
+    top: 40,
+    right: 15,
+  },
+  imageLogout: {
+    width: 40,
+    height: 40,
   },
 });
 
-export default Registerstyles;
+export default ProfileInfoStyles;

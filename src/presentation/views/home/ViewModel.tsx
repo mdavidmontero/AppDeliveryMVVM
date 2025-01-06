@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { LoginAuthUseCase } from "../../../domain/useCases/auth/LoginAuth";
 import { saveUserLocalUseCase } from "../../../domain/useCases/userLocal/SaveUserLocal";
 import { useUserLocal } from "../../hooks/useUserLocal";
+import { UserContext } from "../../context/UserContext";
 
 const HomeViewModel = () => {
   const [errorMessage, setErrorMessage] = useState("");
@@ -10,7 +11,8 @@ const HomeViewModel = () => {
     password: "",
   });
 
-  const { user, getUserSession } = useUserLocal();
+  // const { user, getUserSession } = useUserLocal();
+  const { user, saveUserSession } = useContext(UserContext);
 
   const login = async () => {
     if (isValidForm()) {
@@ -19,8 +21,7 @@ const HomeViewModel = () => {
       if (!response.success) {
         setErrorMessage(response.message);
       } else {
-        await saveUserLocalUseCase(response.data);
-        getUserSession();
+        saveUserSession(response.data);
       }
     }
   };
