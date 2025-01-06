@@ -6,6 +6,9 @@ import { Image, TouchableOpacity } from "react-native";
 import { Category } from "../../domain/entities/Category";
 import { AdminCategoryUpdateScreen } from "../views/admin/category/update/CategoryUpdate";
 import { AdminCategoryListScreen } from "../views/admin/category/list/CategoryList";
+import { AdminProductNavigator } from "./AdminProductNavigator";
+import { StackNavigationProp } from "@react-navigation/stack";
+import { useNavigation } from "@react-navigation/native";
 
 export type CategoryStackParamList = {
   AdminCategoryListScreen: undefined;
@@ -17,6 +20,8 @@ export type CategoryStackParamList = {
 const Stack = createNativeStackNavigator<CategoryStackParamList>();
 
 export const AdminCategoryNavigator = () => {
+  const navigation =
+    useNavigation<StackNavigationProp<CategoryStackParamList>>();
   return (
     <CategoryState>
       <Stack.Navigator
@@ -27,7 +32,7 @@ export const AdminCategoryNavigator = () => {
         <Stack.Screen
           name="AdminCategoryListScreen"
           component={AdminCategoryListScreen}
-          options={({ route, navigation }) => ({
+          options={({ route }) => ({
             headerShown: true,
             title: "Categorias",
             headerRight: () => (
@@ -61,11 +66,10 @@ export const AdminCategoryNavigator = () => {
           }}
         />
 
-        {/* <Stack.Screen
-              name="AdminProductNavigator"
-              component={AdminProductNavigator}
-              
-            /> */}
+        <Stack.Screen
+          name="AdminProductNavigator"
+          component={AdminProductNavigator}
+        />
       </Stack.Navigator>
     </CategoryState>
   );
