@@ -6,62 +6,60 @@ import { RoundedButton } from "./RoundedButton";
 interface Props {
   openGallery: () => void;
   openCamera: () => void;
-  modalUsestate: boolean;
-  setmodalUseState: React.Dispatch<React.SetStateAction<boolean>>;
+  modalUseState: boolean;
+  setModalUseState: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const ModalPickImage = ({
   openGallery,
   openCamera,
-  modalUsestate,
-  setmodalUseState,
+  setModalUseState,
+  modalUseState,
 }: Props) => {
   return (
-    <SafeAreaProvider>
-      <SafeAreaView style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={modalUsestate}
-          onRequestClose={() => {
-            Alert.alert("Modal has been closed.");
-            setmodalUseState(!modalUsestate);
-          }}
-        >
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-              <Text>Selecciona una Opción</Text>
-              <View style={styles.butttonContainer}>
-                <RoundedButton
-                  onPress={() => {
-                    openGallery();
-                    setmodalUseState(false);
-                  }}
-                  text="Galeria"
-                />
-              </View>
-              <View style={styles.butttonContainer}>
-                <RoundedButton
-                  onPress={() => {
-                    openCamera();
-                    setmodalUseState(false);
-                  }}
-                  text="Camara"
-                />
-              </View>
+    <View style={styles.centeredView}>
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={modalUseState}
+        onRequestClose={() => {
+          Alert.alert("Modal has been closed.");
+          setModalUseState(!modalUseState);
+        }}
+      >
+        <View style={styles.centeredView}>
+          <View style={styles.modalView}>
+            <Text>Selecciona una opcion</Text>
+            <View style={styles.buttonContainer}>
+              <RoundedButton
+                onPress={() => {
+                  openGallery();
+                  setModalUseState(false);
+                }}
+                text="Galeria"
+              />
+            </View>
+            <View style={styles.buttonContainer}>
+              <RoundedButton
+                onPress={() => {
+                  openCamera();
+                  setModalUseState(false);
+                }}
+                text="Camara"
+              />
             </View>
           </View>
-        </Modal>
-      </SafeAreaView>
-    </SafeAreaProvider>
+        </View>
+      </Modal>
+    </View>
   );
 };
-
 const styles = StyleSheet.create({
   centeredView: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 22,
   },
   modalView: {
     width: 250,
@@ -69,10 +67,10 @@ const styles = StyleSheet.create({
     margin: 20,
     backgroundColor: "white",
     borderRadius: 20,
+
     paddingTop: 35,
     paddingLeft: 25,
     paddingRight: 25,
-
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
@@ -103,7 +101,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
   },
-  butttonContainer: {
+  buttonContainer: {
     width: "100%",
     marginTop: 8,
   },

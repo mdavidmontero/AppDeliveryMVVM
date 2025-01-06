@@ -26,4 +26,13 @@ ApiDelivery.interceptors.request.use(async (config) => {
   return config;
 });
 
+ApiDeliveryFormImage.interceptors.request.use(async (config) => {
+  const data = await LocalStorage().getItem("user");
+  if (data) {
+    const user: User = JSON.parse(data as any);
+    config.headers!["Authorization"] = user?.session_token!;
+  }
+  return config;
+});
+
 export { ApiDelivery, ApiDeliveryFormImage };
